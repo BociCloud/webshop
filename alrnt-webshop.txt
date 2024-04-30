@@ -1,0 +1,85 @@
+
+
+Igény:
+kb Emag BF (2022) https://www.emag.hu/blog/2022/11/105-milliard-forintos-forgalom-375-ezer-eladott-termek-a-2022-es-black-fridayon/
+4000 rendelés/min csúcs (80 ord/sec)
+24 óra alatt 166 ezer vásárló, 400 ezer termék
+2023 BF terv: 1 millió termék /nap
+
+SPECjEnterprise2010 (2016-es eredmény) 600 tr/sec/cpu core (x64)
+-> order processing appserver - 1 CPU 
+
+Vásárlás folyamata
+Lead (online hirdetés, email uuid, ismeretlen/platát) -> lending page 
+Kampány, vevő (ismert/anonymous), érdekes termék -> CRM rendszerbe, lazán csatolt (queue)
+
+lending page redirect -> termék katalógus (esetleg specifikus termék/termék csoport aloldal)
+
+Kosárba pakolás, rendelés véglegesítsé
+Rendelés kezelés elválik a nézelődéstől, "hagyományos" tranzakciós 
+
+Fizetés, visszaigazolás
+Rendelkezés szállításról
+
+
+
+
+
+Termék katalógus - böngészés
+Becslés: 1 rendelés == 20-50 böngészgetés (közben akár másik fülön másik webáruház ellenőrzése) 200 k kattintés/keresés / perc
+Kb statikus termék katalógus
+Termék paraméterek relációs helyett jobban hasonlítanak szabad szöveges, schema free db-re. (Fűnyíró, macskatáp, arckrém, nanofetes liposzomás)
+Indexelés, frissítés háttérben, akár ütemezetten, csak a változásokat.
+(typesense: 10 query/sec/cpu) result cache -> CDN (akamai, cloudflare, aws cloudfront)
+
+Termékek száma: Emag marketplace: 23 millió termék, 56 k kereskedő
+
+Termék karbantartás
+Feltételezés: SAP nem csak számláz (azt esetleg pont nem), hanem mást is csinál (készlet, logisztika)
+1. Hagyomnányos termék törzs elsődlegesen SAP-ban
+2. Termék leírás, paraméterek képek, prospektus
+Emag felület: xls feltöltés + API
+
+Készlet adatok: hard v soft limit, BF szuper akció (100 termék, 100x100 példányban) feladat-e?
+
+Kosár kezelése
+megfontolandó böngészőben , browser html web store-ban tárolni, így vásárlás véglegesítésekor, egyetlen server hívás terheli csak a rendszert
+Hátrány: vastagabb kliens réteg, vásárlási viselkedés követése hiányosabb
+Méret : 10-20 tétel x productId + mennyiség
+
+
+Felhasználó mgmnt
+1. anonymous vásárló
+2. regisztrált vásárló
+3. kereskedő munkatárs (termék felelős, ügyfélszolgálatos, ...)
+valószínűleg végig el kell fogadni a regisztráció nélküli vásárlást
+
+Keycloak
+Egyedi plugin CRM rendszerhez, mint backendhez csatlakozni
+Céges (pl AD) kapcsolat
+
+
+User story
+Én, mint vásárló, szeretnék egy olyan felületet, ahol a termékek minden paramétere szerint tudok keresni
+
+Én, mint vásárló, szeretném összehasonlítan a különböző termékeket a paramétereik, áruk, elérhetőségük alapján
+
+Én, mint temék manager, szeretném termékcsoportok/főcsoportok szerint hierarchikusan kezelni a termékeket
+
+Én, mint temék manager, szeretném tömegesen feltölteni/frissíteni termékek összes jellemzőjét
+1. termék adatok bontása: alap (közös), technikai jellemzők, media
+2. termék adatok mentése/frissítése termék törzsbe (sap?)
+3. termék szöveges jellemzői (kulcs/érték vagy szabad szöveg) mentése kereső input formátumának megfelelően
+4. termék képei/viedói/prospektusok mentése CMS-be
+
+Én, mint infra felelős, szeretném csökkenteni a lekérdezések okozta terhelést
+
+
+
+
+
+
+
+
+
+
